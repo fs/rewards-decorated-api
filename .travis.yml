@@ -8,3 +8,9 @@ script:
   - yarn lint
   - yarn test
   - yarn build
+deploy:
+  provider: heroku
+  api_key:
+    secure: RhO3DAvZfDSdhcoRWOMEx1bWES49TJdkZd92JjwFLOoogmriOAny0vrohnFUG6jtc/v+4MHtF36Rf64oRZAPyt5q90mfp9Hwki4YxQSzWC1cD19ktIXGHap/cGPiGTImdtsSXr+fDTuKfJf3D8xIWqfrmRFNLZ+1ypbIa2DPFAsWV4B47wn9MkCEmxb6dVyMihUz0D1UCpw8ImnGOTtHZu6KxtrIcVR/XCorMggrAsxpE06Y9PtRFuKF77ZRjGgXxwk8+b8/zyGT8WReG1w7E9PlUfDH350ddRsGblTjEpctocUwlJG5nZhIuZjCMM2D94On8kE+I6VQNE60x1vWZqOiKo9WmDH6WsrrIXknDKytLfmePvGNbhsyOb2OCvckBOgfIm3fNV3ffyJ+JEjhOn1q6lmgqAj4IfJ7pFT50KU3ncA/5sOP240jJ9/hFxSSTv7qQa8V1HWgznWLz1XrQWCNx5+T8B1OztvLV2of0qM3fml14NuApVYWOCtqoGlMyZosqvvgr4GCzKq4tbOLUeC8f8PoHv5Fc7eWfUoQHsUbL4pfaoG8N0CI3ujsXH5T6E+QU5NhwDRYz8+P5hwzHFx0vH3zQv4LjWdvviZfVyGwW4NgpwxydZmiUOeO4E+NVdZ/ZztmvnY/N4U3uGs2L6otnQYMtfieosFmR+gkcgM=
+  app:
+    master: rewards-react-staging
