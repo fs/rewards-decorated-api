@@ -52,5 +52,6 @@
     },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "heroku-run-build-script": true
 }
