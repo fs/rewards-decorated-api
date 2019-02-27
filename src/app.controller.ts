@@ -13,7 +13,7 @@ export class AppController {
     return RESPONSE_TEXT;
   }
 
-  @Get('/*')
+  @Get()
   getHello(): string {
     return this.appService.getHello();
   }
