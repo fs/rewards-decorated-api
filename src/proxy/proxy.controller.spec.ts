@@ -1,25 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { createRequest, createResponse } from 'node-mocks-http';
 import { ProxyController } from './proxy.controller';
-import { ClientRequest, IncomingMessage, ServerResponse } from 'http';
-
-const expectedRewardsApiRequest = {
-  on: (eventName)
-};
-const mockHttpRequest: any = () => expectedRewardsApiRequest;
-
-jest.mock('http', () => ({
-  request: mockHttpRequest,
-}));
+import { PassThrough } from 'stream';
+import { RewardApiService } from '../reward-api/reward-api.service';
 
 describe('Proxy Controller', () => {
+  let rewardsApiService: RewardApiService;
   let controller: ProxyController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ProxyController],
+      providers: [RewardApiService],
     }).compile();
 
+    rewardsApiService = module.get<RewardApiService>(RewardApiService);
     controller = module.get<ProxyController>(ProxyController);
   });
 
@@ -29,14 +24,22 @@ describe('Proxy Controller', () => {
 
   test('proxy', () => {
     // Arrange
-    const mockIncomingRequest: IncomingMessage = createRequest();
-    const expectedOutgoingResponse: ServerResponse = createResponse();
+    const mockIncomingMessage = createRequest();
+    const expectedServerResponse = createResponse();
+
+    const mockRewardsApiResponse = `{"data": 123}`;
+    const mockRewardsApiStream = new PassThrough();
+    mockRewardsApiStream.push(mockRewardsApiResponse);
+    mockRewardsApiStream.end();
+
+    jest.spyOn(rewardsApiService, 'request').mockImplementation(() => (options, callback) => {
+      callback(null, mockRewardsApiStream);
+    });
 
     // Act
-    controller.proxy(mockIncomingRequest, expectedOutgoingResponse);
+    controller.proxy(mockIncomingMessage, expectedServerResponse);
 
     // Assert
-    expect(mockIncomingRequest.pipe).toBeCalledWith(expectedRewardsApiRequest);
-    expect(mockRewardsApiResponse.pipe).toBeCalledWith(expectedOutgoingResponse);
+    expect(expectedServerResponse._getData()).toEqual(mockRewardsApiResponse);
   });
 });
