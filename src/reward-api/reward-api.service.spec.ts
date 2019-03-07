@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RewardApiService } from './reward-api.service';
+import { ClientRequest } from 'http';
 
 describe('RewardApiService', () => {
   let service: RewardApiService;
@@ -17,6 +18,12 @@ describe('RewardApiService', () => {
   });
 
   test('request', () => {
+    // Arrange
 
+    // Act
+    const expectedResult = service.request();
+
+    // Assert
+    expect(expectedResult).toBeInstanceOf(ClientRequest);
   });
 });

@@ -22,7 +22,7 @@ describe('Proxy Controller', () => {
     expect(controller).toBeDefined();
   });
 
-  test('proxy', () => {
+  test('proxy', async () => {
     // Arrange
     const mockIncomingMessage = createRequest();
     const expectedServerResponse = createResponse();
@@ -37,7 +37,7 @@ describe('Proxy Controller', () => {
     });
 
     // Act
-    controller.proxy(mockIncomingMessage, expectedServerResponse);
+    await controller.proxy(mockIncomingMessage, expectedServerResponse);
 
     // Assert
     expect(expectedServerResponse._getData()).toEqual(mockRewardsApiResponse);

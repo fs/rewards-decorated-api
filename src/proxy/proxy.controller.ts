@@ -7,6 +7,6 @@ export class ProxyController {
 
   @Get('*')
   proxy(@Req() request, @Res() response) {
-    return '';
+    response.send('111');
   }
 }
