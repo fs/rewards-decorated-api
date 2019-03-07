@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RewardApiService } from './reward-api.service';
-import { ClientRequest } from 'http';
+import * as http from 'http';
 
 describe('RewardApiService', () => {
   let service: RewardApiService;
@@ -19,11 +19,16 @@ describe('RewardApiService', () => {
 
   test('request', () => {
     // Arrange
+    const actualOptions = {};
+    const actualCallback = () => undefined;
+
+    const spy = jest.spyOn(http, 'request');
 
     // Act
-    const expectedResult = service.request();
+    const expectedResult = service.request(actualOptions, actualCallback);
 
     // Assert
-    expect(expectedResult).toBeInstanceOf(ClientRequest);
+    expect(spy).toHaveBeenCalledWith(actualOptions, actualCallback);
+    expect(expectedResult).toBeInstanceOf(http.ClientRequest);
   });
 });
