@@ -7,6 +7,15 @@ export class ProxyController {
 
   @Get('*')
   proxy(@Req() request, @Res() response) {
-    response.send('111');
+    const rewardsApiRequest = this.rewardsApiService.request({
+      path: request.url,
+      method: request.method,
+      headers: request.headers,
+    }, (rewardsResponse) => {
+      response.writeHead(rewardsResponse.statusCode, rewardsResponse.headers);
+      rewardsResponse.pipe(response);
+    });
+
+    request.pipe(rewardsApiRequest);
   }
 }
