@@ -24,17 +24,35 @@ describe('Proxy Controller', () => {
 
   test('proxy', async () => {
     // Arrange
-    const mockIncomingMessage = createRequest();
-    const expectedServerResponse = createResponse();
+    const mockIncomingMessage: any = createRequest();
+
+    mockIncomingMessage.pipe = (dest) => {
+      dest.end();
+
+      return dest;
+    };
+
+    const expectedServerResponse: any = createResponse();
 
     const mockRewardsApiResponse = `{"data": 123}`;
     const mockRewardsApiStream = new PassThrough();
     mockRewardsApiStream.push(mockRewardsApiResponse);
-    mockRewardsApiStream.end();
+    mockRewardsApiStream.pipe = () => {
+      expectedServerResponse.send(mockRewardsApiResponse);
+      return expectedServerResponse;
+    };
 
-    jest.spyOn(rewardsApiService, 'request').mockImplementation(() => (options, callback) => {
-      callback(null, mockRewardsApiStream);
-    });
+    const mockRewardsApiRequest: any = (options, callback) => {
+      const a = new PassThrough();
+
+      a.on('finish', () => {
+        callback(mockRewardsApiStream);
+      });
+
+      return a;
+    };
+
+    jest.spyOn(rewardsApiService, 'request').mockImplementation(mockRewardsApiRequest);
 
     // Act
     await controller.proxy(mockIncomingMessage, expectedServerResponse);
